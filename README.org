@@ -1,0 +1,68 @@
+I'll shou you step by step, building up from nothing, how I have customized Emacs to my liking.
+
+The first step is connecting Emacs to some package archives.  This is where we get additional software to extend the features of Emacs.
+
+Two packages that I'll need and want right away are Evil and Magit.  So lets add them now.
+
+#+BEGIN_SRC elisp
+(use-package evil)                      ; vi like key bindings
+(use-package magit) 			; git integration
+(use-package evil-magit)                ; vi bindings for magit
+(evil-mode 1)
+#+END_SRC
+
+The next most important thing...turn this screen black before my eyes bleed!
+
+#+BEGIN_SRC elisp
+(load-theme 'wombat t)                  ; color theme
+#+END_SRC
+
+Now since I'm an old man, bump that font size:
+
+#+BEGIN_SRC elisp
+(set-face-attribute 'default nil :height 140 :family "DejaVu Sans Mono") 
+#+END_SRC
+
+Now I don't want to keep having to open this file and ~.emacs.d/init.el~ so turn on desktop mode with: 
+
+#+BEGIN_SRC elsip
+(desktop-save-mode 1)
+#+END_SRC
+
+Okay, now we are finally getting somewhere!
+
+But I need my leader keys and hydras, so:
+
+#+BEGIN_SRC elisp
+(use-package general :config (general-evil-setup t)) 
+(use-package hydra)                     ; hydra menus
+#+END_SRC
+
+Now I gotta configure it:
+
+#+BEGIN_SRC elisp
+(fset 'gdk 'general-define-key)
+(apply 'gdk :prefix "SPC" ; :keymaps: None/All
+       :states '(normal visual emacs motion)
+       '("" nil
+	 "1" (winum-select-window-1 :wk "move window 1")
+	 "2" (winum-select-window-2 :wk "move window 2")
+	 "3" (winum-select-window-3 :wk "move window 3")
+	 "4" (winum-select-window-4 :wk "move window 4")))
+#+END_SRC
+
+Ooops!  I need ~winum~
+
+#+BEGIN_SRC elisp
+(use-package winum)                     ; switch between buffers using numbers
+(winum-mode)
+#+END_SRC
+
+Restart your emacs!  Ensure you have two windows open.  Now hit ~SPC 1~, then ~SPC 2~.  You can quickly switch between windows now!
+
+We need to start using Magit so lets configure that up!
+
+#+BEGIN_SRC elisp
+"g" (:ignore t :wk "Magit")
+"gs" (magit-status :wk "magit status")
+#+END_SRC
