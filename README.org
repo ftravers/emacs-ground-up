@@ -1,4 +1,4 @@
-I'll shou you step by step, building up from nothing, how I have customized Emacs to my liking.
+I'll show you step by step, building up from nothing, how I have customized Emacs to my liking.
 
 The first step is connecting Emacs to some package archives.  This is where we get additional software to extend the features of Emacs.
 
@@ -65,4 +65,34 @@ We need to start using Magit so lets configure that up!
 #+BEGIN_SRC elisp
 "g" (:ignore t :wk "Magit")
 "gs" (magit-status :wk "magit status")
+#+END_SRC
+
+Now ~SPC g s~ gets you the magit status window! :)
+
+Lets make our first Hydra:
+
+#+BEGIN_SRC elisp
+(defhydra hydra-buffers ()
+  "
+^^^       BUFFERS ^^^
+^ Goto  ^ ^ Save  ^ ^ Misc  ^  
+^-------^ ^-------^ ^-------^
+_k_ prev  _s_ this  _d_ kill
+_j_ next  _a_ all   _b_ list 
+"
+  ("j" next-buffer nil)
+  ("k" previous-buffer nil)
+
+  ("s" save-buffer nil)
+  ("a" (lambda () (interactive) (save-some-buffers t)) nil :exit t)
+  ("b" helm-mini nil :exit t)
+  ("d" kill-this-buffer nil :exit t)
+
+  ("q" nil "quit" :exit t :color pink))
+#+END_SRC
+
+Lets activate this hydra with ~SPC b~.
+
+#+BEGIN_SRC elisp
+"b" (hydra-buffers/body :wk ">BUFFERS<")
 #+END_SRC

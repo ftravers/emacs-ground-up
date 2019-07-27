@@ -40,6 +40,24 @@
 (use-package winum)                     ; switch between buffers using numbers
 (winum-mode)
 
+(defhydra hydra-buffers ()
+  "
+^^^       BUFFERS ^^^
+^ Goto  ^ ^ Save  ^ ^ Misc  ^  
+^-------^ ^-------^ ^-------^
+_k_ prev  _s_ this  _d_ kill
+_j_ next  _a_ all   _b_ list 
+"
+  ("j" next-buffer nil)
+  ("k" previous-buffer nil)
+
+  ("s" save-buffer nil)
+  ("a" (lambda () (interactive) (save-some-buffers t)) nil :exit t)
+  ("b" helm-mini nil :exit t)
+  ("d" kill-this-buffer nil :exit t)
+
+  ("q" nil "quit" :exit t :color pink))
+
 (fset 'gdk 'general-define-key)
 
 (apply 'gdk :prefix "SPC" ; :keymaps: None/All
@@ -49,10 +67,10 @@
 	 "2" (winum-select-window-2 :wk "move window 2")
 	 "3" (winum-select-window-3 :wk "move window 3")
 	 "4" (winum-select-window-4 :wk "move window 4")
+	 "b" (hydra-buffers/body :wk ">BUFFERS<")
 	 "g" (:ignore t :wk "Magit")
 	 "gs" (magit-status :wk "magit status")
 	 ))
-
 
 
 
