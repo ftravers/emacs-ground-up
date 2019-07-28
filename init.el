@@ -45,7 +45,7 @@
 ^^^       BUFFERS ^^^
 ^ Goto  ^ ^ Save  ^ ^ Misc  ^  
 ^-------^ ^-------^ ^-------^
-_k_ prev  _s_ this  _b_ list
+_k_ prev  _s_ this  _x_ kill
 _j_ next  _a_ all    
 "
   ("j" next-buffer nil)
@@ -53,23 +53,25 @@ _j_ next  _a_ all
 
   ("s" save-buffer nil)
   ("a" (lambda () (interactive) (save-some-buffers t)) nil :exit t)
-  ("d" kill-this-buffer nil :exit t)
+
+  ("x" kill-this-buffer nil)
 
   ("q" nil "quit" :exit t :color pink))
 
-(fset 'gdk 'general-define-key)
+(fset 'gdk ')
 
-(apply 'gdk :prefix "SPC" ; :keymaps: None/All
-       :states '(normal visual emacs motion)
-       '("" nil
-	 "1" (winum-select-window-1 :wk "move window 1")
-	 "2" (winum-select-window-2 :wk "move window 2")
-	 "3" (winum-select-window-3 :wk "move window 3")
-	 "4" (winum-select-window-4 :wk "move window 4")
-	 "b" (hydra-buffers/body :wk ">BUFFERS<")
-	 "g" (:ignore t :wk "Magit")
-	 "gs" (magit-status :wk "magit status")
-	 ))
+(general-define-key
+ :prefix "SPC"
+ :states '(normal visual emacs motion)
+ '("" nil
+   "1" winum-select-window-1
+   "2" winum-select-window-2
+   "3" winum-select-window-3
+   "4" winum-select-window-4
+   "b" hydra-buffers/body
+   "g" (:ignore t :wk "Magit")
+   "gs" magit-status
+   ))
 
 
 

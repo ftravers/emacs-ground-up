@@ -1,17 +1,28 @@
-I'll show you step by step, building up from nothing, how I have customized Emacs to my liking.
+* Intro
+I'll show you step by step, building up from nothing, how I have
+customized Emacs to my liking.
 
-The first step is connecting Emacs to some package archives.  This is where we get additional software to extend the features of Emacs.
+The first step is connecting Emacs to some package archives.  This is
+where we get additional software to extend the features of Emacs.
 
-Two packages that I'll need and want right away are Evil and Magit.  So lets add them now.
+* Evil
+
+We need to be evil.  All seasoned programmers eventually realize the
+wisdom of Vi keybindings.  With the Evil package we can have that in
+Emacs too.
 
 #+BEGIN_SRC elisp
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 (use-package evil)                      ; vi like key bindings
-(use-package magit) 			; git integration
-(use-package evil-magit)                ; vi bindings for magit
 (evil-mode 1)
 #+END_SRC
 
-The next most important thing...turn this screen black before my eyes bleed!
+That ~setq gnutls-...~ is a bug workaround.
+
+* Color Theme
+
+The next most important thing...turn this screen black before my eyes
+bleed!
 
 #+BEGIN_SRC elisp
 (load-theme 'wombat t)                  ; color theme
@@ -23,7 +34,10 @@ Now since I'm an old man, bump that font size:
 (set-face-attribute 'default nil :height 140 :family "DejaVu Sans Mono") 
 #+END_SRC
 
-Now I don't want to keep having to open this file and ~.emacs.d/init.el~ so turn on desktop mode with: 
+* Desktop Mode
+
+Now I don't want to keep having to open this file and
+~.emacs.d/init.el~ so turn on desktop mode with:
 
 #+BEGIN_SRC elsip
 (desktop-save-mode 1)
@@ -31,27 +45,20 @@ Now I don't want to keep having to open this file and ~.emacs.d/init.el~ so turn
 
 Okay, now we are finally getting somewhere!
 
-But I need my leader keys and hydras, so:
+* Leader Keys
 
-#+BEGIN_SRC elisp
-(use-package general :config (general-evil-setup t)) 
-(use-package hydra)                     ; hydra menus
-#+END_SRC
+Now to be efficient programmers we need to be able to run functions
+very quickly and easily.  Leader keys were popularized by the
+spacemacs customization of emacs.  The concept is to allow us to call
+functions by simply hitting the spacebar when in ~normal~ mode of Vi.
+Lets supercharge our spacebar now!
 
-Now I gotta configure it:
+** winum
 
-#+BEGIN_SRC elisp
-(fset 'gdk 'general-define-key)
-(apply 'gdk :prefix "SPC" ; :keymaps: None/All
-       :states '(normal visual emacs motion)
-       '("" nil
-	 "1" (winum-select-window-1 :wk "move window 1")
-	 "2" (winum-select-window-2 :wk "move window 2")
-	 "3" (winum-select-window-3 :wk "move window 3")
-	 "4" (winum-select-window-4 :wk "move window 4")))
-#+END_SRC
-
-Ooops!  I need ~winum~
+However we need to tell our spacebar to do something interesting.  One
+thing I like to do is use the ~winum~ package.  What this allows you
+to do is to hop from one window in emacs to another by just hitting
+~SPC~ then the number of the window.  So lets install ~winum~:
 
 #+BEGIN_SRC elisp
 (use-package winum)                     ; switch between buffers using numbers
@@ -60,14 +67,67 @@ Ooops!  I need ~winum~
 
 Restart your emacs!  Ensure you have two windows open.  Now hit ~SPC 1~, then ~SPC 2~.  You can quickly switch between windows now!
 
-We need to start using Magit so lets configure that up!
+** general
+
+Now we can use the ~general~ package to redefine the spacebar to be
+our leader key.
+
+#+BEGIN_SRC elisp
+(use-package general :config (general-evil-setup t)) 
+#+END_SRC
+
+Finally configure general:
+
+#+BEGIN_SRC elisp
+  (general-define-key 
+   :prefix "SPC"
+   :states '(normal visual emacs motion)
+   '("" nil
+     "1" winum-select-window-1
+     "2" winum-select-window-2
+     "3" winum-select-window-3
+     "4" winum-select-window-4))
+#+END_SRC
+
+What this says, is that ~SPC~ is the prefix key, it applies when we
+are in the ~normal~ state (among others).  Then we have a list where
+the item in quotes is the key that will be hit after ~SPC~, followed
+by the command that should get run.
+
+Restart Emacs to try it out!
+
+* Magit
+
+Magit lets us use git.  As programmers we need to use git, so lets
+install that!
+
+#+BEGIN_SRC elisp
+(use-package magit) 			; git integration
+(use-package evil-magit)                ; vi bindings for magit
+#+END_SRC
+
+Configure general to use Magit:
 
 #+BEGIN_SRC elisp
 "g" (:ignore t :wk "Magit")
 "gs" (magit-status :wk "magit status")
 #+END_SRC
 
+Git Tag: 
+
+Restart.
+
 Now ~SPC g s~ gets you the magit status window! :)
+
+* Hydras
+
+Hydras allow you to build text based menus that call functions when
+you hit the corresponding key.  Again efficiently and easily calling
+functions will speed you up! 
+
+#+BEGIN_SRC elisp
+(use-package hydra)                     ; hydra menus
+#+END_SRC
 
 Lets make our first Hydra:
 
@@ -95,3 +155,6 @@ Lets activate this hydra with ~SPC b~.
 #+BEGIN_SRC elisp
 "b" (hydra-buffers/body :wk ">BUFFERS<")
 #+END_SRC
+
+: GIT TAG: hydras
+
