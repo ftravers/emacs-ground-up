@@ -35,30 +35,9 @@
 
 (use-package general                    ; key binding framework
   :config (general-evil-setup t)) 
-(use-package hydra)                     ; hydra menus
 
 (use-package winum)                     ; switch between buffers using numbers
 (winum-mode)
-
-(defhydra hydra-buffers ()
-  "
-^^^       BUFFERS ^^^
-^ Goto  ^ ^ Save  ^ ^ Misc  ^  
-^-------^ ^-------^ ^-------^
-_k_ prev  _s_ this  _x_ kill
-_j_ next  _a_ all    
-"
-  ("j" next-buffer nil)
-  ("k" previous-buffer nil)
-
-  ("s" save-buffer nil)
-  ("a" (lambda () (interactive) (save-some-buffers t)) nil :exit t)
-
-  ("x" kill-this-buffer nil)
-
-  ("q" nil "quit" :exit t :color pink))
-
-(fset 'gdk ')
 
 (general-define-key
  :prefix "SPC"
@@ -67,15 +46,7 @@ _j_ next  _a_ all
    "1" winum-select-window-1
    "2" winum-select-window-2
    "3" winum-select-window-3
-   "4" winum-select-window-4
-   "b" hydra-buffers/body
-   "g" (:ignore t :wk "Magit")
-   "gs" magit-status
-   ))
-
-
-
-
+   "4" winum-select-window-4))
 
 
 (custom-set-variables
