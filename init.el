@@ -45,15 +45,14 @@
 ^^^       BUFFERS ^^^
 ^ Goto  ^ ^ Save  ^ ^ Misc  ^  
 ^-------^ ^-------^ ^-------^
-_k_ prev  _s_ this  _d_ kill
-_j_ next  _a_ all   _b_ list 
+_k_ prev  _s_ this  _b_ list
+_j_ next  _a_ all    
 "
   ("j" next-buffer nil)
   ("k" previous-buffer nil)
 
   ("s" save-buffer nil)
   ("a" (lambda () (interactive) (save-some-buffers t)) nil :exit t)
-  ("b" helm-mini nil :exit t)
   ("d" kill-this-buffer nil :exit t)
 
   ("q" nil "quit" :exit t :color pink))
