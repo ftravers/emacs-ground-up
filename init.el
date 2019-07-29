@@ -47,9 +47,7 @@
  "1" 'winum-select-window-1
  "2" 'winum-select-window-2
  "3" 'winum-select-window-3
- "4" 'winum-select-window-4
- "g" '(:ignore t :wk "Magit")
- "gs" 'magit-status)
+ "4" 'winum-select-window-4)
 
 
 
