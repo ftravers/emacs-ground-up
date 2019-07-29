@@ -45,6 +45,7 @@ Now I don't want to keep having to open this file and
 
 Okay, now we are finally getting somewhere!
 
+Git Tag: 
 * Leader Keys
 
 Now to be efficient programmers we need to be able to run functions
@@ -88,6 +89,8 @@ Finally configure general:
  "3" 'winum-select-window-3
  "4" 'winum-select-window-4)
 #+END_SRC
+
+Git Tag: leader-key
 
 What this says, is that ~SPC~ is the prefix key, it applies when we
 are in the ~normal~ state (among others).  Then we have a list where

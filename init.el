@@ -2,12 +2,8 @@
 
 ;; ============= package archives ========
 (require 'package)
-
 (add-to-list 'package-archives '("gnu"   . "https://elpa.gnu.org/packages/") t)
-
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-
-;(add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/") t)
 
 ;; ============== use package =============
 (package-initialize)
@@ -18,9 +14,9 @@
       (package-install 'use-package)))
 
 (require 'use-package)
-
 (setq use-package-always-ensure t)    ;; download packages if not already downloaded
 
+;; ============== Our Packages ============
 (use-package evil)                      ; vi like key bindings
 (use-package magit) 			; git integration
 (use-package evil-magit)                ; vi bindings for magit
@@ -32,26 +28,6 @@
 (set-face-attribute 'default nil :height 140 :family "DejaVu Sans Mono") 
 
 (desktop-save-mode 1)
-
-(use-package general                    ; key binding framework
-  :config (general-evil-setup t)) 
-(use-package hydra)                     ; hydra menus
-
-(use-package winum)                     ; switch between buffers using numbers
-(winum-mode)
-
-(general-define-key
- :prefix "SPC"
- :states '(normal visual emacs motion)
- "" nil
- "1" 'winum-select-window-1
- "2" 'winum-select-window-2
- "3" 'winum-select-window-3
- "4" 'winum-select-window-4)
-
-
-
-
 
 
 (custom-set-variables
