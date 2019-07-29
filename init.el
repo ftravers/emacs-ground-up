@@ -18,8 +18,6 @@
 
 ;; ============== Our Packages ============
 (use-package evil)                      ; vi like key bindings
-(use-package magit) 			; git integration
-(use-package evil-magit)                ; vi bindings for magit
 
 (evil-mode 1)
 
