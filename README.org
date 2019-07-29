@@ -79,14 +79,16 @@ our leader key.
 Finally configure general:
 
 #+BEGIN_SRC elisp
-  (general-define-key 
-   :prefix "SPC"
-   :states '(normal visual emacs motion)
-   '("" nil
-     "1" winum-select-window-1
-     "2" winum-select-window-2
-     "3" winum-select-window-3
-     "4" winum-select-window-4))
+(general-define-key
+ :prefix "SPC"
+ :states '(normal visual emacs motion)
+ "" nil
+ "1" 'winum-select-window-1
+ "2" 'winum-select-window-2
+ "3" 'winum-select-window-3
+ "4" 'winum-select-window-4
+ "g" '(:ignore t :wk "Magit")
+ "gs" 'magit-status)
 #+END_SRC
 
 What this says, is that ~SPC~ is the prefix key, it applies when we
@@ -113,7 +115,7 @@ Configure general to use Magit:
 "gs" (magit-status :wk "magit status")
 #+END_SRC
 
-Git Tag: 
+Git Tag: magit
 
 Restart.
 

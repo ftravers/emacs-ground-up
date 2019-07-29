@@ -2,3 +2,6 @@
 elpa/
 transient/
 auto-save-list/
+/#README.org#
+/.emacs.desktop
+/.emacs.desktop.lock

@@ -35,6 +35,7 @@
 
 (use-package general                    ; key binding framework
   :config (general-evil-setup t)) 
+(use-package hydra)                     ; hydra menus
 
 (use-package winum)                     ; switch between buffers using numbers
 (winum-mode)
@@ -42,11 +43,17 @@
 (general-define-key
  :prefix "SPC"
  :states '(normal visual emacs motion)
- '("" nil
-   "1" winum-select-window-1
-   "2" winum-select-window-2
-   "3" winum-select-window-3
-   "4" winum-select-window-4))
+ "" nil
+ "1" 'winum-select-window-1
+ "2" 'winum-select-window-2
+ "3" 'winum-select-window-3
+ "4" 'winum-select-window-4
+ "g" '(:ignore t :wk "Magit")
+ "gs" 'magit-status)
+
+
+
+
 
 
 (custom-set-variables
