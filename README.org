@@ -86,9 +86,7 @@ Finally configure general:
  "1" 'winum-select-window-1
  "2" 'winum-select-window-2
  "3" 'winum-select-window-3
- "4" 'winum-select-window-4
- "g" '(:ignore t :wk "Magit")
- "gs" 'magit-status)
+ "4" 'winum-select-window-4)
 #+END_SRC
 
 What this says, is that ~SPC~ is the prefix key, it applies when we
@@ -96,7 +94,9 @@ are in the ~normal~ state (among others).  Then we have a list where
 the item in quotes is the key that will be hit after ~SPC~, followed
 by the command that should get run.
 
-Restart Emacs to try it out!
+No need to restart, we can just evaluation that expression.  Go after
+the final parenthesis of the ~general-define-key~ command, and do ~C-x
+C-e~.  
 
 * Magit
 
