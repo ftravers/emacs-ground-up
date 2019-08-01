@@ -1,10 +1,47 @@
 * Intro
-I'll show you step by step, building up from nothing, how I have
-customized Emacs to my liking.
+  A tutorial on how to configure a nice Emacs setup for coding in
+Clojure, Elisp and text editing in Org mode.
+
+* Features
+  The goals of the customization are to make coding and editing as
+  fast and efficient as possible.  This is achieved by:
++ minimizing removing the fingers from the home row
++ minimum number of keystrokes to run common commands
+
+Other features:
++ Vi keybindings
++ Leader key, ala Spacemacs
++ Lisp/Clojure structural editing
++ Text menus
++ Magit
++ Elisp debugging
+
+* Get started, packages
 
 The first step is connecting Emacs to some package archives.  This is
 where we get additional software to extend the features of Emacs.
+Create the file and folder:
 
+: ~/.emacs.d/init.el
+
+put the following in it:
+
+#+BEGIN_SRC elisp
+;; ============= package archives ========
+(require 'package)
+(add-to-list 'package-archives '("gnu"   . "https://elpa.gnu.org/packages/") t)
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+
+;; ============== use package =============
+(package-initialize)
+(when (not package-archive-contents) (package-refresh-contents))
+(if (not (package-installed-p 'use-package))
+    (progn
+      (package-refresh-contents) 
+      (package-install 'use-package)))
+(require 'use-package)
+(setq use-package-always-ensure t)    ;; download packages if not already downloaded
+#+END_SRC
 * Evil
 
 We need to be evil.  All seasoned programmers eventually realize the
@@ -134,6 +171,8 @@ functions will speed you up!
 (use-package hydra)                     ; hydra menus
 #+END_SRC
 
+** Buffer Hydra Menu
+
 Lets make our first Hydra:
 
 #+BEGIN_SRC elisp
@@ -161,5 +200,19 @@ Lets activate this hydra with ~SPC b~.
 "b" (hydra-buffers/body :wk ">BUFFERS<")
 #+END_SRC
 
-: GIT TAG: hydras
+: GIT TAG: hydra
 
+* Project Management   
+
+A couple of other packages I like are projectile and helm.  Projectile
+allows you to work with git managed projects.  Lets get that now.
+
+!!!!!!!!!!!!!!!!!!!
+just added project to init.el
+need to get SPC p f working
+dunno if not include helm just yet...
+!!!!!!!!!!!!!!!!!!!!!!
+#+BEGIN_SRC elisp
+
+
+#+END_SRC

@@ -1,13 +1,7 @@
-(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
-
 ;; ============= package archives ========
 (require 'package)
-
 (add-to-list 'package-archives '("gnu"   . "https://elpa.gnu.org/packages/") t)
-
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-
-;(add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/") t)
 
 ;; ============== use package =============
 (package-initialize)
@@ -16,30 +10,35 @@
     (progn
       (package-refresh-contents) 
       (package-install 'use-package)))
-
 (require 'use-package)
-
 (setq use-package-always-ensure t)    ;; download packages if not already downloaded
 
+
+;; ============= Packages ================
 (use-package evil)                      ; vi like key bindings
 (use-package magit) 			; git integration
 (use-package evil-magit)                ; vi bindings for magit
-
-(evil-mode 1)
-
-(load-theme 'wombat t)                  ; color theme
-
-(set-face-attribute 'default nil :height 140 :family "DejaVu Sans Mono") 
-
-(desktop-save-mode 1)
-
 (use-package general                    ; key binding framework
   :config (general-evil-setup t)) 
 (use-package hydra)                     ; hydra menus
 
 (use-package winum)                     ; switch between buffers using numbers
-(winum-mode)
+(use-package projectile)                ; navigate git projects
+(use-package helm-projectile            ; auto-complete commands)                  
 
+;; ============== Package Config ================
+(evil-mode 1)
+(load-theme 'wombat t)                  ; color theme
+(set-face-attribute 'default nil :height 140 :family "DejaVu Sans Mono") 
+(desktop-save-mode 1)
+(winum-mode)
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+(setq-default truncate-lines t) 	; dont wrap long lines
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(toggle-scroll-bar -1)
+
+;; =========== Hydras ===============
 (defhydra hydra-buffers ()
   "
 ^^^       BUFFERS ^^^
@@ -58,6 +57,8 @@ _j_ next  _a_ all
 
   ("q" nil "quit" :exit t :color pink))
 
+
+;; ============== Leader Key ===============
 (fset 'gdk 'general-define-key)
 
 (apply 'gdk 
@@ -74,10 +75,7 @@ _j_ next  _a_ all
 	 ))
 
 
-
-
-
-
+;; ============ Emacs Crap ====================
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
