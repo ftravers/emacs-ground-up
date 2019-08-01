@@ -6,15 +6,15 @@ Clojure, Elisp and text editing in Org mode.
   The goals of the customization are to make coding and editing as
   fast and efficient as possible.  This is achieved by:
 + minimizing removing the fingers from the home row
-+ minimum number of keystrokes to run common commands
++ minimizing the number of keystrokes to run common commands
 
 Other features:
 + Vi keybindings
-+ Leader key, ala Spacemacs
-+ Lisp/Clojure structural editing
-+ Text menus
++ Leader key, like in Spacemacs
++ Lisp structural editing
++ Text menus with Hydra
 + Magit
-+ Elisp debugging
++ Elisp/Clojure debugging
 
 * Get started, packages
 
@@ -42,11 +42,17 @@ put the following in it:
 (require 'use-package)
 (setq use-package-always-ensure t)    ;; download packages if not already downloaded
 #+END_SRC
+
 * Evil
 
 We need to be evil.  All seasoned programmers eventually realize the
 wisdom of Vi keybindings.  With the Evil package we can have that in
-Emacs too.
+Emacs too.  Unless otherwise specified, chunks of code like the
+following should be added to your:
+
+: ~/.emacs.d/init.el
+
+file.
 
 #+BEGIN_SRC elisp
 (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
@@ -80,9 +86,19 @@ Now I don't want to keep having to open this file and
 (desktop-save-mode 1)
 #+END_SRC
 
-Okay, now we are finally getting somewhere!
+Finally a few more tweeks:
+
+#+BEGIN_SRC elisp
+  (menu-bar-mode -1)                ; turn off the menu bar, get more vertical space for coding
+  (tool-bar-mode -1)                ; turn off tool bar, same reason as above
+  (toggle-scroll-bar -1)            ; remove scroll bars, we'll use keys to scroll
+  (setq-default truncate-lines t)   ; dont wrap long lines
+#+END_SRC
+
+Okay, now we are finally getting somewhere!  Restart Emacs to see your changes.
 
 Git Tag: 
+
 * Leader Keys
 
 Now to be efficient programmers we need to be able to run functions
