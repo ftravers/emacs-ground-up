@@ -97,7 +97,7 @@ Finally a few more tweeks:
 
 Okay, now we are finally getting somewhere!  Restart Emacs to see your changes.
 
-Git Tag: 
+Git Tag: evil
 
 * Leader Keys
 
