@@ -24,7 +24,6 @@
 
 (use-package winum)                     ; switch between buffers using numbers
 (use-package projectile)                ; navigate git projects
-(use-package helm-projectile            ; auto-complete commands)                  
 
 ;; ============== Package Config ================
 (evil-mode 1)
