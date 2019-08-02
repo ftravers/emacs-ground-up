@@ -93,6 +93,11 @@ Finally a few more tweeks:
   (tool-bar-mode -1)                ; turn off tool bar, same reason as above
   (toggle-scroll-bar -1)            ; remove scroll bars, we'll use keys to scroll
   (setq-default truncate-lines t)   ; dont wrap long lines
+
+(highlight-parentheses-mode 1)
+(show-paren-mode 1)
+(setq projectile-completion-system 'helm
+      projectile-switch-project-action 'helm-projectile)  
 #+END_SRC
 
 Okay, now we are finally getting somewhere!  Restart Emacs to see your changes.
@@ -223,12 +228,51 @@ Lets activate this hydra with ~SPC b~.
 A couple of other packages I like are projectile and helm.  Projectile
 allows you to work with git managed projects.  Lets get that now.
 
-!!!!!!!!!!!!!!!!!!!
-just added project to init.el
-need to get SPC p f working
-dunno if not include helm just yet...
-!!!!!!!!!!!!!!!!!!!!!!
 #+BEGIN_SRC elisp
+(use-package projectile)                ; navigate git projects
+(use-package helm)                      ; incremental completions and narrowing selections 
+(use-package helm-projectile)           ; integrate projectile with helm 
+(helm-mode 1)
+(projectile-global-mode)
+(helm-projectile-on)
+(setq projectile-completion-system 'helm
+      projectile-switch-project-action 'helm-projectile)  
+#+END_SRC
 
+So we can quickly test out commands, lets make ~SPC SPC~ a shortcut
+for running ~Alt-x~.  Also add the projectile commands:
 
+#+BEGIN_SRC elisp
+(apply 'gdk 
+   ...
+  '(...
+    "SPC" helm-M-x
+    "p" (:ignore t)
+    "pf" helm-projectile-find-file
+    "pp" helm-projectile-switch-project
+#+END_SRC
+
+Just add the ~"SPC", "p", "pf" and "pp"~ parts, the apply part is
+already in your file and the elipses, elide redundant parts.
+
+Restart.
+
+Try ~SPC SPC~, ~SPC p p~ and ~SPC p f~.
+
+* window management
+
+Here is are some key defs for window management:
+
+#+BEGIN_SRC elisp
+        "w" (:ignore t)
+        "wd" delete-window-balance
+        "w0" delete-window-balance
+        "wm" delete-other-windows
+        "w1" delete-other-windows
+        "wv" split-window-vertical-balance
+        "w2" split-window-vertical-balance
+        "w-" split-window-below-balance
+        "w3" split-window-below-balance
+        "w=" balance-windows
+        "wt" transpose-windows
 #+END_SRC
