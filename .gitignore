@@ -6,3 +6,6 @@ auto-save-list/
 /.emacs.desktop
 /.emacs.desktop.lock
 /init.el.bak
+/emacs.desktop
+/init.el~
+/places

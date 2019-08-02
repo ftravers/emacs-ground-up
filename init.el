@@ -25,6 +25,10 @@
 (use-package projectile)                ; navigate git projects
 (use-package helm)                      ; incremental completions and narrowing selections 
 (use-package helm-projectile)           ; integrate projectile with helm 
+(use-package lispy)                     ; structural lisp editing
+(use-package evil-lispy)                ; vi bindings for lispy
+
+
 
 ;; ============== Package Config ================
 (evil-mode 1)
@@ -39,6 +43,76 @@
 (toggle-scroll-bar -1)
 (setq projectile-completion-system 'helm
       projectile-switch-project-action 'helm-projectile)  
+
+
+;; ================== Functions ================
+(defun in-special-p ()
+  (and (evil-lispy-state-p)
+       (or (lispy-right-p) (lispy-left-p))))
+(defun i-lispy ()
+  (interactive)
+  (let* ((char-at-point (char-after))
+	 (char-b4-point (char-before))
+	 (close-paren 41)
+	 (open-paren 40))
+    (if (region-active-p)
+	(lispy-tab)
+      (progn
+	(if (and char-at-point (= char-at-point open-paren))
+	    (if (in-special-p)
+		(special-lispy-tab)))))
+    (if (not (in-special-p))
+	(evil-lispy-state))))
+(defun o-lispy ()
+  (interactive)
+  (evil-open-below 1)
+  (call-interactively #'evil-lispy-state))
+(defun O-lispy ()
+  (interactive)
+  (evil-open-above 1)
+  (call-interactively #'evil-lispy-state))
+(defun a-lispy ()
+  (interactive)
+  (evil-append 1)
+  (call-interactively #'evil-lispy-state))
+(defun A-lispy ()
+  (interactive)
+  (evil-append-line 1)
+  (evil-lispy-state))
+(defun my-remove-lispy-key (key)
+  (define-key lispy-mode-map-base key nil)
+  (define-key lispy-mode-map-lispy key nil)
+  (define-key lispy-mode-map-oleh key nil)
+  (define-key lispy-mode-map-paredit key nil)
+  (define-key lispy-mode-map-special key nil))
+(defun fenton/open-par-brk-crly-q ()
+  "true if on opening paren, brack or curly"
+  (let* ((open-paren 40)
+         (open-bracket 91)
+         (open-curly 123)
+         (char-at-point (char-after)))
+    (cond ((eq char-at-point open-paren) t)
+          ((eq char-at-point open-curly) t)
+          ((eq char-at-point open-bracket) t)
+          (t nil))))
+(defun fenton/close-par-brk-crly-q ()
+  "true if on opening paren, brack or curly"
+  (let* ((close-paren 41)
+         (close-bracket 93)
+         (close-curly 125)
+         (char-at-point (char-after)))
+    (cond ((eq char-at-point close-paren) t)
+          ((eq char-at-point close-curly) t)
+          ((eq char-at-point close-bracket) t)
+          (t nil))))
+(defun fenton/first-paren ()
+  (interactive)
+  (re-search-forward "[]\(\[{}\)]")
+  (backward-char)
+  (if (fenton/open-par-brk-crly-q)
+      (call-interactively #'evil-lispy/enter-state-left))
+  (if (fenton/close-par-brk-crly-q)
+      (call-interactively #'evil-lispy/enter-state-right)))
 
 ;; =========== Hydras ===============
 (defhydra hydra-buffers ()
@@ -91,6 +165,17 @@ _j_ next  _a_ all
          "wt" transpose-windows
 	 ))
 
+(apply
+ 'gdk :keymaps '(emacs-lisp-mode-map)
+ :states '(normal visual emacs)
+ '("" nil
+   "i" (i-lispy :wk "insert -> lispy state")
+   "o" (o-lispy :wk "open below -> lispy state")
+   "O" (O-lispy :wk "open above -> lispy state")
+   "a" (a-lispy :wk "append -> lispy state")
+   "A" (A-lispy :wk "append line -> lispy state")
+   "]" (fenton/first-paren :wk "enter lispy mode right")
+   "[" evil-lispy/enter-state-left))
 
 ;; ============ Emacs Crap ====================
 (custom-set-variables

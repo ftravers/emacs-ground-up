@@ -259,6 +259,114 @@ Restart.
 
 Try ~SPC SPC~, ~SPC p p~ and ~SPC p f~.
 
+* Lisp Structural Editing
+This one is pretty important and big, it allows us to edit elisp, or
+clojure with some powerful time savers.  Install/Enable packages:
+
+#+BEGIN_SRC elisp
+(use-package lispy)                     ; structural lisp editing
+(use-package evil-lispy)                ; vi bindings for lispy
+#+END_SRC
+
+Lets setup keys that only get activated when we are in the
+~emacs-lisp-mode~:
+
+#+BEGIN_SRC elisp
+    ;; ================== keydefs =====================
+    (apply
+     'gdk :keymaps '(emacs-lisp-mode-map)
+     :states '(normal visual emacs)
+     '("" nil
+       "i" (i-lispy :wk "insert -> lispy state")
+       "o" (o-lispy :wk "open below -> lispy state")
+       "O" (O-lispy :wk "open above -> lispy state")
+       "a" (a-lispy :wk "append -> lispy state")
+       "A" (A-lispy :wk "append line -> lispy state")
+       "[" evil-lispy/enter-state-left))
+#+END_SRC
+
+now these call custom functions that I wrote in elisp, so add those
+here now too:
+
+#+BEGIN_SRC elisp
+  ;; ================== my functions ================
+  (defun in-special-p ()
+    (and (evil-lispy-state-p)
+	 (or (lispy-right-p) (lispy-left-p))))
+  (defun o-lispy ()
+      (interactive)
+      (evil-open-below 1)
+      (call-interactively #'evil-lispy-state))
+  (defun O-lispy ()
+      (interactive)
+      (evil-open-above 1)
+      (call-interactively #'evil-lispy-state))
+  (defun a-lispy ()
+      (interactive)
+      (evil-append 1)
+      (call-interactively #'evil-lispy-state))
+  (defun A-lispy ()
+      (interactive)
+      (evil-append-line 1)
+      (evil-lispy-state))
+  (defun i-lispy ()
+      (interactive)
+      (let* ((char-at-point (char-after))
+	     (char-b4-point (char-before))
+	     (close-paren 41)
+	     (open-paren 40))
+	(if (region-active-p)
+	    (lispy-tab)
+	  (progn
+	    (if (and char-at-point (= char-at-point open-paren))
+		(if (in-special-p)
+		    (special-lispy-tab)))))
+	(if (not (in-special-p)) 
+	    (evil-lispy-state))))
+#+END_SRC
+
+Here we override keys using lispy's mechanism:
+
+#+BEGIN_SRC elisp
+;; ============== Leader Key ===============
+;; ...
+(eval-after-load "lispy"
+  `(progn
+     (my-remove-lispy-key (kbd "C-,"))
+     (my-remove-lispy-key (kbd "C-j"))
+     (my-remove-lispy-key (kbd "d"))
+     (my-remove-lispy-key (kbd "e"))
+     (my-remove-lispy-key (kbd "g"))
+     (my-remove-lispy-key (kbd "o"))
+     (my-remove-lispy-key (kbd "O"))
+     (lispy-define-key lispy-mode-map (kbd "o") 'o-lispy)
+     (lispy-define-key lispy-mode-map (kbd "O") 'O-lispy)
+     (lispy-define-key lispy-mode-map (kbd "d") 'lispy-kill-at-point)
+     (lispy-define-key lispy-mode-map (kbd "x") 'collapse-expand)
+     (lispy-define-key lispy-mode-map (kbd "y") 'special-lispy-new-copy)
+     (lispy-define-key lispy-mode-map (kbd "p") 'special-lispy-paste)
+     (lispy-define-key lispy-mode-map (kbd "P") 'evil-paste-before)
+     (lispy-define-key lispy-mode-map (kbd "g") 'g-in-lispy)
+     (lispy-define-key lispy-mode-map (kbd "f") 'special-lispy-flow)
+     (lispy-define-key lispy-mode-map (kbd "i") 'special-lispy-tab)
+     (lispy-define-key lispy-mode-map (kbd "J") 'evil-join)
+     (lispy-define-key lispy-mode-map (kbd ":") 'evil-ex)
+     (lispy-define-key lispy-mode-map (kbd "\"") 'evil-ex)))
+#+END_SRC
+
+and we'll need one more function
+
+#+BEGIN_SRC elisp
+;; ============== functions ================
+;; ...
+(defun my-remove-lispy-key (key)
+  (define-key lispy-mode-map-base key nil)
+  (define-key lispy-mode-map-lispy key nil)
+  (define-key lispy-mode-map-oleh key nil)
+  (define-key lispy-mode-map-paredit key nil)
+  (define-key lispy-mode-map-special key nil))
+#+END_SRC
+
 * window management
 
 Here is are some key defs for window management:
@@ -276,3 +384,6 @@ Here is are some key defs for window management:
         "w=" balance-windows
         "wt" transpose-windows
 #+END_SRC
+
+Git Tag: projectile
+
